@@ -1,9 +1,22 @@
-import React, { useState } from 'react'
+import axios from 'axios';
+import React, { useState, useEffect } from 'react'
 import './index.css';
+
+const useNotes = (url) => {
+  const [notes, setNotes] = useState([]);
+  useEffect(() => {
+    axios.get(url).then(response => {
+      setNotes(response.data);
+    });
+  }, [url]);
+  return notes;
+}
 
 const App = () => {
   const [counter, setCounter] = useState(0);
   const [values, setValues] = useState([]);
+  const notes = useNotes(BACKEND_URL);
+  console.log(notes)
 
   const handleClick = () => {
     setCounter(counter + 1);
@@ -13,9 +26,8 @@ const App = () => {
   return (
     <div className="container">
       hello webpack {counter} clicks
-      <button onClick={handleClick}>
-        click
-      </button>
+      <button onClick={handleClick}>click</button>
+      <div>{notes.length} notes on server {BACKEND_URL} </div>
     </div>
   );
 }
